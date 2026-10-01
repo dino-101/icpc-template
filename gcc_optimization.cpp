@@ -1,0 +1,6 @@
+#pragma GCC optimize("Ofast")
+#pragma GCC target("avx2,bmi,bmi2,lzcnt,popcnt")
+#pragma GCC optimize("unroll-loops")
+#pragma GCC optimize("inline")
+#pragma GCC optimize("fast-math")
+#pragma GCC optimize("O3") 
