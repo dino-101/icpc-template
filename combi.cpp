@@ -116,3 +116,13 @@ struct Combi {
 //
 //     cout << C.nCr(n, r) << endl;
 // }
+
+
+// Think Catalan when you are counting structures that are nested, balanced, or non-crossing, especially when choosing a left part + right part recursively.
+// Typical signs:
+// - Balanced / properly nested structures → parentheses (number of valid arrangements of n pairs of parentheses)
+// - number of ways 2n people can pair up without crossing handshakes.
+// - Non-crossing structures → polygon triangulation, chords
+// - Recursive binary splitting → BSTs, full binary trees
+// - You see a recurrence like
+//   dp[n] = Σ dp[i] * dp[n-1-i]
