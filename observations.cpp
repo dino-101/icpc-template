@@ -142,7 +142,6 @@ vector<vector<pair<int, int>>> arr(13);
 // = 2^k - 1 if k is odd
 
 
-
 // ==================== COMMON IDENTITIES ====================
 
 // (a+b)^2 = a²+2ab+b²
@@ -158,5 +157,3 @@ vector<vector<pair<int, int>>> arr(13);
 // a^n-b^n is divisible by a-b
 
 // a^n+b^n is divisible by a+b when n is odd
-
-
