@@ -4,9 +4,6 @@
 // F(0)=0, F(1)=1, F(2)=1, ... N can be up to 1e18
 // Usage: cout << nthFibonacciNumber(n) << endl;
 
-#include <bits/stdc++.h>
-using namespace std;
-
 const long long FIB_MOD = 1000000007LL;
 
 vector<vector<long long>> _fib_mul(const vector<vector<long long>>& a,const vector<vector<long long>>& b){
