@@ -72,3 +72,29 @@ rotr(x,k);                        // rotate bits right
 
 // Note: clz/ctz and their ll versions are undefined for x=0.
 
+// some tricks
+
+// parity of set bits in a ^ b
+// let x be the no. of set bits in a, 
+// and y = no. of set bits in b.
+// so parity of set bits in a ^ b = parity(x + y)
+
+// a + b = (a ^ b) + 2 * (a & b)
+// a + b = (a | b) + (a & b)
+
+// if we divide a number with 2 ^ k, then we get the last k bits in binary as the remainder
+// similarly if we divide a number in base 3 by 3 ^ k, then last k bits is the remainder 
+
+
+
+// if we take xor or add a number(n) with some odd number, then the parity of number(n) changes.
+// similarly if we take xor or add a number(n) with some even number, then the parity of number(n) does not changes.
+
+
+// Both numbers have the same parity (both even or both odd)
+// Their XOR result will always be even.
+
+// Numbers have different parity (one even, one odd)
+// Their XOR result will always be odd.
+
+// i.e. if x and y are of different parity then x ^ y is odd
