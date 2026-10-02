@@ -37,4 +37,18 @@ int readInt() {
 
 
 // assembly inline
- __attribute__((always_inline)) int func(...) const noexcept __attribute__((hot))
+ __attribute__((always_inline)) int func(...) const noexcept __attribute__((hot));
+
+
+// fast Mod
+// source: https://github.com/kth-competitive-programming/kactl/blob/main/content/various/FastMod.h
+#pragma once
+
+typedef unsigned long long ull;
+struct FastMod {
+	ull b, m;
+	FastMod(ull b) : b(b), m(-1ULL / b) {}
+	ull reduce(ull a) { // a % b + (0 or b)
+		return a - (ull)((__uint128_t(m) * a) >> 64) * b;
+	}
+};
