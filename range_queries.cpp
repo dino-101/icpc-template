@@ -7,37 +7,26 @@
 
 vector<int> segtree;
 
-int combine(int left, int right)
-{
+int combine(int left, int right){
     return min(left, right); // change to +, max, gcd, etc.
 }
-
-void build_tree(int start, int end, vector<int>& arr, int idx)
-{
-    if (start == end)
-    {
+void build_tree(int start, int end, vector<int>& arr, int idx){
+    if (start == end){
         segtree[idx] = arr[start];
         return;
     }
-
     int mid = (start + end) / 2;
-
     build_tree(start, mid, arr, 2 * idx);
     build_tree(mid + 1, end, arr, 2 * idx + 1);
-
     segtree[idx] = combine(segtree[2 * idx], segtree[2 * idx + 1]);
 }
 
-void update(int start, int end, int idx, int pos, int val)
-{
-    if (start == end)
-    {
+void update(int start, int end, int idx, int pos, int val){
+    if (start == end){
         segtree[idx] = val;
         return;
     }
-
     int mid = (start + end) / 2;
-
     if (pos <= mid)
         update(start, mid, 2 * idx, pos, val);
     else
@@ -46,8 +35,7 @@ void update(int start, int end, int idx, int pos, int val)
     segtree[idx] = combine(segtree[2 * idx], segtree[2 * idx + 1]);
 }
 
-int query(int start, int end, int idx, int l, int r)
-{
+int query(int start, int end, int idx, int l, int r){
     if (l <= start && end <= r)
         return segtree[idx];
 
@@ -55,7 +43,6 @@ int query(int start, int end, int idx, int l, int r)
         return LLONG_MAX; // identity for min
 
     int mid = (start + end) / 2;
-
     int leftAns = query(start, mid, 2 * idx, l, r);
     int rightAns = query(mid + 1, end, 2 * idx + 1, l, r);
 
@@ -69,16 +56,14 @@ int query(int start, int end, int idx, int l, int r)
 // range set with update_set(l,r,x); 
 // query with query(l,r).
 
-struct segmenttree
-{
+struct segmenttree{
     int n;
     vector<int> st;
     vector<int> lazy_add;
     vector<int> lazy_set;
     vector<bool> has_lazy_set;
 
-    void init(int _n)
-    {
+    void init(int _n){
         n = _n;
 
         st.assign(4 * n + 5, 0);
@@ -87,20 +72,16 @@ struct segmenttree
         has_lazy_set.assign(4 * n + 5, false);
     }
 
-    int combine(int a, int b)
-    {
+    int combine(int a, int b){
         return a + b; // sum segment tree
     }
 
-    void push(int start, int end, int node)
-    {
+    void push(int start, int end, int node){
         // Pending range set
-        if (has_lazy_set[node])
-        {
+        if (has_lazy_set[node]){
             st[node] = (end - start + 1) * lazy_set[node];
 
-            if (start != end)
-            {
+            if (start != end){
                 has_lazy_set[2 * node] = true;
                 has_lazy_set[2 * node + 1] = true;
 
@@ -110,17 +91,14 @@ struct segmenttree
                 lazy_add[2 * node] = 0;
                 lazy_add[2 * node + 1] = 0;
             }
-
             has_lazy_set[node] = false;
         }
 
         // Pending range addition
-        if (lazy_add[node] != 0)
-        {
+        if (lazy_add[node] != 0){
             st[node] += (end - start + 1) * lazy_add[node];
 
-            if (start != end)
-            {
+            if (start != end){
                 if (has_lazy_set[2 * node])
                     lazy_set[2 * node] += lazy_add[node];
                 else
@@ -131,43 +109,35 @@ struct segmenttree
                 else
                     lazy_add[2 * node + 1] += lazy_add[node];
             }
-
             lazy_add[node] = 0;
         }
     }
 
-    void build(int start, int end, int node, vector<int>& arr)
-    {
-        if (start == end)
-        {
+    void build(int start, int end, int node, vector<int>& arr){
+        if (start == end){
             st[node] = arr[start];
             return;
         }
-
         int mid = (start + end) / 2;
-
         build(start, mid, 2 * node, arr);
         build(mid + 1, end, 2 * node + 1, arr);
 
         st[node] = combine(st[2 * node], st[2 * node + 1]);
     }
 
-    void build(vector<int>& arr)
-    {
+    void build(vector<int>& arr){
         build(1, n, 1, arr);
     }
 
     // Range Add
     void range_add(int start, int end, int node,
-                   int l, int r, int val)
-    {
+                   int l, int r, int val){
         push(start, end, node);
 
         if (start > r || end < l)
             return;
 
-        if (l <= start && end <= r)
-        {
+        if (l <= start && end <= r){
             lazy_add[node] += val;
             push(start, end, node);
             return;
@@ -181,22 +151,19 @@ struct segmenttree
         st[node] = combine(st[2 * node], st[2 * node + 1]);
     }
 
-    void update_add(int l, int r, int val)
-    {
+    void update_add(int l, int r, int val){
         range_add(1, n, 1, l, r, val);
     }
 
     // Range Set
     void range_set(int start, int end, int node,
-                   int l, int r, int val)
-    {
+                   int l, int r, int val){
         push(start, end, node);
 
         if (start > r || end < l)
             return;
 
-        if (l <= start && end <= r)
-        {
+        if (l <= start && end <= r){
             has_lazy_set[node] = true;
             lazy_set[node] = val;
             lazy_add[node] = 0;
@@ -213,15 +180,13 @@ struct segmenttree
         st[node] = combine(st[2 * node], st[2 * node + 1]);
     }
 
-    void update_set(int l, int r, int val)
-    {
+    void update_set(int l, int r, int val){
         range_set(1, n, 1, l, r, val);
     }
 
     // Range Query
     int query(int start, int end, int node,
-              int l, int r)
-    {
+              int l, int r){
         push(start, end, node);
 
         if (start > r || end < l)
@@ -238,8 +203,7 @@ struct segmenttree
         );
     }
 
-    int query(int l, int r)
-    {
+    int query(int l, int r){
         return query(1, n, 1, l, r);
     }
 };
@@ -248,25 +212,21 @@ struct segmenttree
 // ==================== FENWICK TREE / BIT ====================
 // Usage: create BIT(n); add(pos,val) for point update; sum(l,r) for range query.
 
-struct BIT
-{
+struct BIT{
     int n;
     vector<int> bit;
 
-    BIT(int _n)
-    {
+    BIT(int _n){
         n = _n;
         bit.assign(n + 1, 0);
     }
 
-    void add(int idx, int val)
-    {
+    void add(int idx, int val){
         for (; idx <= n; idx += idx & -idx)
             bit[idx] += val;
     }
 
-    int sum(int idx)
-    {
+    int sum(int idx){
         int ans = 0;
 
         for (; idx > 0; idx -= idx & -idx)
@@ -275,8 +235,7 @@ struct BIT
         return ans;
     }
 
-    int sum(int l, int r)
-    {
+    int sum(int l, int r){
         return sum(r) - sum(l - 1);
     }
 };
@@ -286,19 +245,16 @@ struct BIT
 // ==================== SPARSE TABLE ====================
 // Usage: build with build(arr); query static range [l,r] with query(l,r).
 
-struct SparseTable
-{
+struct SparseTable{
     int n, LOG;
     vector<vector<int>> st;
     vector<int> lg;
 
-    int combine(int a, int b)
-    {
+    int combine(int a, int b){
         return min(a, b); // change to max, gcd, etc.
     }
 
-    void build(vector<int>& arr)
-    {
+    void build(vector<int>& arr){
         n = arr.size() - 1; // 1-indexed
         LOG = 1;
 
@@ -314,10 +270,8 @@ struct SparseTable
         for (int i = 1; i <= n; i++)
             st[0][i] = arr[i];
 
-        for (int j = 1; j < LOG; j++)
-        {
-            for (int i = 1; i + (1 << j) - 1 <= n; i++)
-            {
+        for (int j = 1; j < LOG; j++){
+            for (int i = 1; i + (1 << j) - 1 <= n; i++){
                 st[j][i] = combine(
                     st[j - 1][i],
                     st[j - 1][i + (1 << (j - 1))]
@@ -326,8 +280,7 @@ struct SparseTable
         }
     }
 
-    int query(int l, int r)
-    {
+    int query(int l, int r){
         int j = lg[r - l + 1];
 
         return combine(
@@ -341,22 +294,18 @@ struct SparseTable
 // ==================== 2D PREFIX SUM ====================
 // Usage: Prefix2D P(a); query rectangle [x1,y1] to [x2,y2] with P.query(x1,y1,x2,y2).
 
-struct Prefix2D
-{
+struct Prefix2D{
     int n, m;
     vector<vector<int>> pref;
 
-    Prefix2D(vector<vector<int>>& a)
-    {
+    Prefix2D(vector<vector<int>>& a){
         n = a.size() - 1;
         m = a[0].size() - 1;
 
         pref.assign(n + 1, vector<int>(m + 1, 0));
 
-        for (int i = 1; i <= n; i++)
-        {
-            for (int j = 1; j <= m; j++)
-            {
+        for (int i = 1; i <= n; i++){
+            for (int j = 1; j <= m; j++){
                 pref[i][j] = a[i][j]
                            + pref[i - 1][j]
                            + pref[i][j - 1]
@@ -365,8 +314,7 @@ struct Prefix2D
         }
     }
 
-    int query(int x1, int y1, int x2, int y2)
-    {
+    int query(int x1, int y1, int x2, int y2){
         return pref[x2][y2]
              - pref[x1 - 1][y2]
              - pref[x2][y1 - 1]
@@ -378,27 +326,23 @@ struct Prefix2D
 // ==================== 2D FENWICK TREE ====================
 // Usage: BIT2D bit(n,m); bit.add(x,y,val); bit.query(x1,y1,x2,y2).
 
-struct BIT2D
-{
+struct BIT2D{
     int n, m;
     vector<vector<int>> bit;
 
-    BIT2D(int _n, int _m)
-    {
+    BIT2D(int _n, int _m){
         n = _n;
         m = _m;
         bit.assign(n + 1, vector<int>(m + 1, 0));
     }
 
-    void add(int x, int y, int val)
-    {
+    void add(int x, int y, int val){
         for (int i = x; i <= n; i += i & -i)
             for (int j = y; j <= m; j += j & -j)
                 bit[i][j] += val;
     }
 
-    int sum(int x, int y)
-    {
+    int sum(int x, int y){
         int ans = 0;
 
         for (int i = x; i > 0; i -= i & -i)
@@ -408,8 +352,7 @@ struct BIT2D
         return ans;
     }
 
-    int query(int x1, int y1, int x2, int y2)
-    {
+    int query(int x1, int y1, int x2, int y2){
         return sum(x2, y2)
              - sum(x1 - 1, y2)
              - sum(x2, y1 - 1)
@@ -423,13 +366,11 @@ struct BIT2D
 // Usage: SegTree2D st(a); point update with st.update(x,y,val);
 // query rectangle [x1,y1] to [x2,y2] with st.query(x1,y1,x2,y2).
 
-struct SegTree2D
-{
+struct SegTree2D{
     int n, m;
     vector<vector<int>> st;
 
-    SegTree2D(vector<vector<int>>& a)
-    {
+    SegTree2D(vector<vector<int>>& a){
         n = a.size() - 1;
         m = a[0].size() - 1;
 
@@ -439,16 +380,13 @@ struct SegTree2D
     }
 
     void buildY(int nodeX, int lx, int rx, int nodeY, int ly, int ry,
-                vector<vector<int>>& a)
-    {
-        if (ly == ry)
-        {
+                vector<vector<int>>& a){
+        if (ly == ry){
             if (lx == rx)
                 st[nodeX][nodeY] = a[lx][ly];
             else
                 st[nodeX][nodeY] = st[2 * nodeX][nodeY]
                                   + st[2 * nodeX + 1][nodeY];
-
             return;
         }
 
@@ -461,30 +399,24 @@ struct SegTree2D
                           + st[nodeX][2 * nodeY + 1];
     }
 
-    void buildX(int nodeX, int lx, int rx, vector<vector<int>>& a)
-    {
-        if (lx != rx)
-        {
+    void buildX(int nodeX, int lx, int rx, vector<vector<int>>& a){
+        if (lx != rx){
             int mx = (lx + rx) / 2;
 
             buildX(2 * nodeX, lx, mx, a);
             buildX(2 * nodeX + 1, mx + 1, rx, a);
         }
-
         buildY(nodeX, lx, rx, 1, 1, m, a);
     }
 
     void updateY(int nodeX, int lx, int rx, int nodeY, int ly, int ry,
-                 int x, int y, int val)
-    {
-        if (ly == ry)
-        {
+                 int x, int y, int val){
+        if (ly == ry){
             if (lx == rx)
                 st[nodeX][nodeY] = val;
             else
                 st[nodeX][nodeY] = st[2 * nodeX][nodeY]
                                   + st[2 * nodeX + 1][nodeY];
-
             return;
         }
 
@@ -499,10 +431,8 @@ struct SegTree2D
                           + st[nodeX][2 * nodeY + 1];
     }
 
-    void updateX(int nodeX, int lx, int rx, int x, int y, int val)
-    {
-        if (lx != rx)
-        {
+    void updateX(int nodeX, int lx, int rx, int x, int y, int val){
+        if (lx != rx){
             int mx = (lx + rx) / 2;
 
             if (x <= mx)
@@ -514,14 +444,12 @@ struct SegTree2D
         updateY(nodeX, lx, rx, 1, 1, m, x, y, val);
     }
 
-    void update(int x, int y, int val)
-    {
+    void update(int x, int y, int val){
         updateX(1, 1, n, x, y, val);
     }
 
     int queryY(int nodeX, int nodeY, int ly, int ry,
-               int ql, int qr)
-    {
+               int ql, int qr){
         if (qr < ly || ry < ql)
             return 0;
 
@@ -535,8 +463,7 @@ struct SegTree2D
     }
 
     int queryX(int nodeX, int lx, int rx,
-               int qx1, int qx2, int qy1, int qy2)
-    {
+               int qx1, int qx2, int qy1, int qy2){
         if (qx2 < lx || rx < qx1)
             return 0;
 
@@ -550,8 +477,7 @@ struct SegTree2D
                        qx1, qx2, qy1, qy2);
     }
 
-    int query(int x1, int y1, int x2, int y2)
-    {
+    int query(int x1, int y1, int x2, int y2){
         return queryX(1, 1, n, x1, x2, y1, y2);
     }
 };
@@ -561,13 +487,11 @@ struct SegTree2D
 // ==================== SQRT DECOMPOSITION ====================
 // Usage: SqrtDecomp S(arr); point update with S.update(pos,val); range query with S.query(l,r).
 
-struct SqrtDecomp
-{
+struct SqrtDecomp{
     int n, block;
     vector<int> a, b;
 
-    SqrtDecomp(vector<int>& arr)
-    {
+    SqrtDecomp(vector<int>& arr){
         a = arr;
         n = a.size() - 1;
         block = sqrt(n) + 1;
@@ -578,21 +502,18 @@ struct SqrtDecomp
             b[i / block] += a[i];
     }
 
-    void update(int pos, int val)
-    {
+    void update(int pos, int val){
         b[pos / block] += val - a[pos];
         a[pos] = val;
     }
 
-    int query(int l, int r)
-    {
+    int query(int l, int r){
         int ans = 0;
 
         while (l <= r && l % block != 0)
             ans += a[l++];
 
-        while (l + block - 1 <= r)
-        {
+        while (l + block - 1 <= r){
             ans += b[l / block];
             l += block;
         }
@@ -610,12 +531,10 @@ struct SqrtDecomp
 // Usage: fill queries as {l,r,id}; sort with Mo comparator;
 // maintain current range using add/remove; store answer[id].
 
-struct Query
-{
+struct Query{
     int l, r, id;
 
-    bool operator<(const Query& other) const
-    {
+    bool operator<(const Query& other) const{
         static int block = 1;
         int b1 = l / block;
         int b2 = other.l / block;
@@ -631,15 +550,13 @@ struct Query
 // Query::block is not directly settable with the above static member,
 // so use this simpler comparator instead:
 
-struct MoQuery
-{
+struct MoQuery{
     int l, r, id;
 };
 
 int MO_BLOCK;
 
-bool moCmp(const MoQuery& a, const MoQuery& b)
-{
+bool moCmp(const MoQuery& a, const MoQuery& b){
     int ba = a.l / MO_BLOCK;
     int bb = b.l / MO_BLOCK;
 
@@ -656,13 +573,11 @@ bool moCmp(const MoQuery& a, const MoQuery& b)
 int L = 1, R = 0;
 int curAns = 0;
 
-void add(int pos, vector<int>& a)
-{
+void add(int pos, vector<int>& a){
     // add a[pos] to current answer
 }
 
-void remove_(int pos, vector<int>& a)
-{
+void remove_(int pos, vector<int>& a){
     // remove a[pos] from current answer
 }
 
@@ -672,5 +587,3 @@ void remove_(int pos, vector<int>& a)
 // while(L < q.l) remove_(L++,a);
 // while(R > q.r) remove_(R--,a);
 // ans[q.id] = curAns;
-
-
