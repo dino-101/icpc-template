@@ -2,7 +2,6 @@
 
 // digit dp
 
-
 // Q1
 // Digit Sum code (atcoder - S)
 // Find the number of integers between 
@@ -100,8 +99,6 @@ int32_t main()
   return 0;
 }
 
-
-
 // bitmask dp
 
 // generating all subsets using dp
@@ -135,4 +132,3 @@ int main(){
 } 
 // Time Complexity: O(n * n * 2^n)
 // Space Complexity: O(n * 2^n) for dp array + O(n) for recursion stack
-
