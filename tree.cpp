@@ -1,4 +1,5 @@
 
+
 // ==================== TREE DP ====================
 // Example: subtree sum.
 // Usage: set val[u], then call dfsTreeDP(root, 0, adj).
@@ -19,7 +20,6 @@ void dfsTreeDP(int u, int p, vector<vector<int>>& adj,
         dp[u] += dp[v];
     }
 }
-
 
 
 // ==================== REROOTING DP ====================
@@ -67,7 +67,6 @@ vector<long long> rerooting(int n, vector<vector<int>>& adj) {
 
     return dpReroot;
 }
-
 
 
 // ==================== BINARY LIFTING ====================
