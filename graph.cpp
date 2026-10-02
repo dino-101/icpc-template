@@ -1,7 +1,6 @@
 
 
 // ---------- DFS ----------
-
 void dfs(int u) {
     vis[u] = true;
 
@@ -12,9 +11,7 @@ void dfs(int u) {
     }
 }
 
-
 // ---------- BFS ----------
-
 vector<int> bfs(int src, int n) {
     vector<int> dist(n, -1);
     queue<int> q;
@@ -36,7 +33,6 @@ vector<int> bfs(int src, int n) {
 
     return dist;
 }
-
 
 // Bipartite Graph - BFS
 // color[i] = -1 -> uncolored
@@ -73,9 +69,7 @@ bool isBipartite(int n, vector<vector<int>>& adj) {
     return true;
 }
 
-
 // ==================== CYCLE DETECTION ====================
-
 // ---------- Undirected Graph (DFS) ----------
 
 bool dfsUndirected(int u, int parent, vector<vector<int>>& adj,
@@ -141,7 +135,6 @@ bool hasCycleUndirectedBFS(int n, vector<vector<int>>& adj) {
     return false;
 }
 
-
 // ---------- Directed Graph (DFS) ----------
 // state:
 // 0 = unvisited
@@ -180,7 +173,6 @@ bool hasCycleDirected(int n, vector<vector<int>>& adj) {
     return false;
 }
 
-
 // ---------- Directed Graph (Kahn's Algorithm) ----------
 // If processed vertices < n -> cycle exists
 
@@ -192,22 +184,17 @@ bool hasCycleDirectedBFS(int n, vector<vector<int>>& adj) {
             indegree[v]++;
         }
     }
-
     queue<int> q;
-
     for (int i = 0; i < n; i++) {
         if (indegree[i] == 0) {
             q.push(i);
         }
     }
-
     int cnt = 0;
-
     while (!q.empty()) {
         int u = q.front();
         q.pop();
         cnt++;
-
         for (int v : adj[u]) {
             indegree[v]--;
 
@@ -216,10 +203,8 @@ bool hasCycleDirectedBFS(int n, vector<vector<int>>& adj) {
             }
         }
     }
-
     return cnt != n;
 }
-
 
 // ==================== TOPOLOGICAL SORT ====================
 
@@ -237,10 +222,8 @@ bool dfs(int u, vector<vector<int>>& adj, vector<int>& state,
                 return false;
         }
     }
-
     state[u] = 2;
     topo.push_back(u);
-
     return true;
 }
 
@@ -254,11 +237,9 @@ vector<int> topoSortDFS(int n, vector<vector<int>>& adj) {
                 return {}; // cycle
         }
     }
-
     reverse(topo.begin(), topo.end());
     return topo;
 }
-
 
 // ---------- Kahn's Algorithm (BFS) ----------
 
@@ -300,7 +281,6 @@ vector<int> topoSortBFS(int n, vector<vector<int>>& adj) {
     return topo;
 }
 
-
 // ==================== DIJKSTRA ====================
 // For graphs with NON-NEGATIVE edge weights.
 //
@@ -338,8 +318,6 @@ vector<long long> dijkstra(int src, int n,
 
     return dist;
 }
-
-
 
 // ==================== DSU ====================
 
@@ -480,8 +458,6 @@ pair<long long, vector<Edge>> prim(int n,
     return {mstWeight, mst};
 }
 
-
-
 // ==================== FLOYD-WARSHALL ====================
 // Usage: dist[u][v] = edge weight, then run floydWarshall(dist, n).
 // Supports negative edges, but not negative cycles.
@@ -504,7 +480,6 @@ void floydWarshall(vector<vector<long long>>& dist, int n) {
         }
     }
 }
-
 
 // ==================== BELLMAN-FORD ====================
 // Usage: edges = {{u,v,w},...}, then call bellmanFord(src,n,edges).
@@ -548,7 +523,6 @@ vector<long long> bellmanFord(int src, int n, vector<Edge>& edges) {
     return dist;
 }
 
-
 // ==================== KOSARAJU SCC + CONDENSATION GRAPH ====================
 // 1-indexed graph
 // Returns:
@@ -557,6 +531,19 @@ vector<long long> bellmanFord(int src, int n, vector<Edge>& edges) {
 //
 // roots[u] = representative (minimum vertex) of u's SCC
 // condes[root1] contains root2 if there is an edge between SCCs
+
+// how to find strongly connected components 
+// scc is valid only for directed graph
+// using kosaraju's algorithm
+
+// ques like --> find the number of scc or print all scc
+
+// a scc means a maximal set of vertices in a directed graph where every vertex is reachable from every other vertex in that set.
+
+// steps
+// 1. Sort the graph using dfs based on their finishing times
+// 2. Reverse the graph
+// 3. Do dfs based on the finishing times in the reversed graph and print the components
 
 pair<vector<vector<int>>, vector<vector<int>>> kosa(
     vector<vector<int>>& graph, int n) {
@@ -641,8 +628,6 @@ pair<vector<vector<int>>, vector<vector<int>>> kosa(
 
     return {compo, condes};
 }
-
-
 
 // ==================== BRIDGES ====================
 // Usage: build adj, then call findBridges(n, adj).
@@ -746,3 +731,5 @@ vector<int> articulationPoints(
 
     return ans;
 }
+
+=============================================================
